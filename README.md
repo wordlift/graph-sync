@@ -18,7 +18,7 @@ GitHub Action to install `worai` and run:
 | `config_path` | No | `''` | If set, action runs `worai --config <path> ...`. |
 | `debug` | No | `false` | When truthy (`true/1/yes`), appends `--debug`. |
 | `working_directory` | No | `.` | Directory where `worai` runs. |
-| `worai_version` | No | `1.14.0` | Exact `worai` version installed by the action. |
+| `worai_version` | No | `1.16.2` | Exact `worai` version installed by the action. |
 
 ## Behavior
 

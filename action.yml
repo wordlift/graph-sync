@@ -24,7 +24,7 @@ inputs:
   worai_version:
     description: 'Pinned worai version to install'
     required: false
-    default: '1.14.0'
+    default: '1.16.2'
 
 runs:
   using: 'composite'

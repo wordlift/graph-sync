@@ -6,7 +6,7 @@
 - `config_path` (optional)
 - `debug` (optional, default `false`)
 - `working_directory` (optional, default `.`)
-- `worai_version` (optional, default `1.14.0`)
+- `worai_version` (optional, default `1.16.2`)
 
 ## Installation
 
