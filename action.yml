@@ -1,5 +1,5 @@
 name: 'graph-sync'
-description: 'Install worai and run graph sync for a selected profile'
+description: 'Graph Sync using worai by WordLift'
 author: 'WordLift'
 branding:
   icon: 'upload-cloud'
