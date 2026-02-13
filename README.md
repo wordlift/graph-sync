@@ -56,7 +56,7 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: wordlift/worai-github-action@v1
+      - uses: wordlift/graph-sync@v1
         with:
           profile: production
 ```
@@ -75,7 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: wordlift/worai-github-action@v1
+      - uses: wordlift/graph-sync@v1
         with:
           profile: production
           config_path: ./worai.toml

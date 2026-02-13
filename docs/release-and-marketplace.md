@@ -17,7 +17,7 @@
 For best security, consumers should pin actions by full commit SHA. Example:
 
 ```yaml
-- uses: wordlift/worai-github-action@<full-commit-sha>
+- uses: wordlift/graph-sync@<full-commit-sha>
 ```
 
 If a tag is used, prefer a stable major tag (for example `@v1`) maintained as an alias to immutable release commits.
