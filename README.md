@@ -7,16 +7,18 @@ GitHub Action to install `worai` and run:
 
 ## Requirements
 
-- Python must be available on the runner (for installing `worai`).
+- Python (`python3` or `python`) must be available on the runner.
 - `profile` is required and must exist in the selected `worai` config.
 
 ## Inputs
 
-- `profile` (required): profile name to pass with `--profile`.
-- `config_path` (optional): if set, action passes root `--config <path>`.
-- `debug` (optional, default `false`): when `true`, appends `--debug`.
-- `working_directory` (optional, default `.`): where command executes.
-- `worai_version` (optional, default `1.14.0`): pinned `worai` version to install.
+| Input | Required | Default | Description |
+| --- | --- | --- | --- |
+| `profile` | Yes | - | Profile name passed to `--profile`. Must exist in selected config. |
+| `config_path` | No | `''` | If set, action runs `worai --config <path> ...`. |
+| `debug` | No | `false` | When truthy (`true/1/yes`), appends `--debug`. |
+| `working_directory` | No | `.` | Directory where `worai` runs. |
+| `worai_version` | No | `1.14.0` | Exact `worai` version installed by the action. |
 
 ## Behavior
 
@@ -43,7 +45,25 @@ Without root `--config`, standard `worai` config discovery applies:
 - `google_search_console` can be global or profile-level in `worai.toml`; profile value overrides global value; default is `false` when unset; maps to SDK setting `GOOGLE_SEARCH_CONSOLE`.
 - The command fails when selected profile does not define `api_key`.
 
-## Usage
+## Minimal Usage
+
+```yaml
+name: Sync graph
+on:
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: wordlift/worai-github-action@v1
+        with:
+          profile: production
+```
+
+## Typical Usage (Repo Config File)
+
+Use this when `worai.toml` is in your repository.
 
 ```yaml
 name: Sync graph
@@ -55,15 +75,48 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
-        with:
-          python-version: '3.11'
-      - uses: ./. # or owner/repo@tag
+      - uses: wordlift/worai-github-action@v1
         with:
           profile: production
           config_path: ./worai.toml
           debug: false
-          worai_version: 1.14.0
+```
+
+## Optional Runner Setup
+
+- `actions/checkout` is required only if your config file is in the repo workspace.
+- `actions/setup-python` is optional on GitHub-hosted runners (Python is usually preinstalled), but recommended if you want a fixed Python version.
+
+## worai Config Examples
+
+Minimal `worai.toml` with explicit URLs:
+
+```toml
+[production]
+api_key = "wl_***"
+urls = [
+  "https://example.com/page-1",
+  "https://example.com/page-2"
+]
+```
+
+Sitemap source:
+
+```toml
+[production]
+api_key = "wl_***"
+sitemap_url = "https://example.com/sitemap.xml"
+sitemap_url_pattern = "/blog/"
+```
+
+Google Sheets source:
+
+```toml
+[production]
+api_key = "wl_***"
+sheets_url = "https://docs.google.com/spreadsheets/d/..."
+sheets_name = "Sheet1"
+sheets_service_account = "/path/to/service-account.json"
 ```
 
 ## Release and Pinning
