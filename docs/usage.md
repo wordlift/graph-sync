@@ -29,7 +29,7 @@ When `config_path` is not provided, `worai` discovers config in this order:
 
 ## Installer Behavior
 
-- The action installs a pinned `worai` version via input `worai_version` (default `1.16.2`).
+- The action installs a pinned `worai` version via input `worai_version` (default `1.17.0`).
 - Python interpreter resolution order is:
   - `python3`
   - `python`
