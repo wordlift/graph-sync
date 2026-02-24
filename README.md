@@ -18,7 +18,7 @@ GitHub Action to install `worai` and run:
 | `config_path` | No | `''` | If set, action runs `worai --config <path> ...`. |
 | `debug` | No | `false` | When truthy (`true/1/yes`), appends `--debug`. |
 | `working_directory` | No | `.` | Directory where `worai` runs. |
-| `worai_version` | No | `1.17.0` | Exact `worai` version installed by the action. |
+| `worai_version` | No | `6.0.0` | Exact `worai` version installed by the action. |
 
 ## Behavior
 
@@ -56,7 +56,7 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: wordlift/graph-sync@v1
+      - uses: wordlift/graph-sync@v6
         with:
           profile: production
 ```
@@ -75,7 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: wordlift/graph-sync@v1
+      - uses: wordlift/graph-sync@v6
         with:
           profile: production
           config_path: ./worai.toml
@@ -119,9 +119,15 @@ sheets_name = "URLs_US"
 
 - Publish immutable releases and move major tags (`v1`, `v2`) only by creating new immutable release tags.
 - Consumers should pin this action to a full commit SHA for maximum integrity.
-- If using tags, prefer stable major tags (`@v1`) and keep them mapped to immutable release commits.
-- This repository includes automated release workflow `.github/workflows/release.yml` triggered by pushing tags like `v1.2.3`.
+- If using tags, prefer stable major tags (`@v6`) and keep them mapped to immutable release commits.
+- This repository includes automated release workflow `.github/workflows/release.yml` triggered by pushing tags like `v6.0.0`.
 - Marketplace publication itself is still a manual GitHub UI step; the release workflow adds a summary with a direct release link and checklist.
+- Versioning strategy and compatibility policy are documented in `VERSIONING.md`.
+
+## Migration from `@v1`
+
+- Replace `uses: wordlift/graph-sync@v1` with `uses: wordlift/graph-sync@v6`.
+- Action `v6` defaults to installing `worai` `6.0.0`.
 
 ## Development
 

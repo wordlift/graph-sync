@@ -7,7 +7,7 @@
 
 ## Documentation Sync
 
-- Keep `README.md`, `docs/`, `specs/`, `INDEX.md`, and `TODO.md` aligned with implementation.
+- Keep `README.md`, `VERSIONING.md`, `docs/`, `specs/`, `INDEX.md`, and `TODO.md` aligned with implementation.
 
 ## Action Scope
 

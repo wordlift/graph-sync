@@ -1,6 +1,7 @@
 # Project Index
 
 - `README.md`: user-facing action documentation and usage.
+- `VERSIONING.md`: action and `worai` versioning and compatibility policy.
 - `LICENSE`: project license.
 - `action.yml`: action metadata and execution steps.
 - `.github/workflows/release.yml`: manual release automation for immutable tags and major aliases.
