@@ -12,9 +12,9 @@
 - [x] Bump default pinned `worai_version` to `6.0.0`, align action examples to `@v6`, and add `VERSIONING.md` policy.
 - [x] Refresh `worai.toml` docs examples with anonymized multi-profile Google Sheets config (`acme`).
 - [x] Add optional Python Playwright installer with Chromium browser defaults and dedicated tests.
+- [x] Add optional built-in cache for pip and Playwright binaries with auto-derived cache key suffix fallback.
 
 ## Future
 
 - [x] Add automated release workflow for version tags and major tag alias updates.
-- [ ] Add optional pip cache support for faster installs in repeated CI runs.
 - [ ] Add a dedicated preflight workflow that validates Marketplace checklist fields before tagging.

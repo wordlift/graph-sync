@@ -22,6 +22,8 @@ GitHub Action to install `worai`, install Python Playwright + Chromium, and run:
 | `install_playwright` | No | `true` | Installs Playwright Python package and browser binaries when truthy (`true/1/yes`). |
 | `playwright_version` | No | `1.55.0` | Exact Playwright Python package version installed when Playwright install is enabled. |
 | `playwright_browser` | No | `chromium` | Browser passed to `python -m playwright install`. |
+| `cache_enabled` | No | `true` | Enables dependency cache for pip and Playwright browser binaries when truthy (`true/1/yes`). |
+| `cache_key_suffix` | No | `''` | Optional cache key suffix. When empty, action derives `<worai_version>-<playwright_version>-<playwright_browser>`. |
 
 ## Behavior
 
@@ -48,6 +50,9 @@ Without root `--config`, standard `worai` config discovery applies:
 - `google_search_console` can be global or profile-level in `worai.toml`; profile value overrides global value; default is `false` when unset; maps to SDK setting `GOOGLE_SEARCH_CONSOLE`.
 - The command fails when selected profile does not define `api_key`.
 - By default, the action installs `playwright==1.55.0` and Chromium. Set `install_playwright: false` to skip this step.
+- By default, cache is enabled for `~/.cache/pip` and `~/.cache/ms-playwright`.
+- Default cache key format is `<runner.os>-graph-sync-<worai_version>-<playwright_version>-<playwright_browser>`.
+- Set `cache_enabled: false` to disable cache or set `cache_key_suffix` to control the key suffix directly.
 
 ## Minimal Usage
 
@@ -142,4 +147,5 @@ Run tests locally:
 ./tests/run-worai.sh
 ./tests/install-worai.sh
 ./tests/install-playwright.sh
+./tests/resolve-cache-key.sh
 ```

@@ -6,6 +6,7 @@
    - `./tests/run-worai.sh`
    - `./tests/install-worai.sh`
    - `./tests/install-playwright.sh`
+   - `./tests/resolve-cache-key.sh`
 2. Push a semantic version tag (example `v6.0.0`) to GitHub.
 3. Workflow `.github/workflows/release.yml` runs automatically and will:
    - validate tag format (`vMAJOR.MINOR.PATCH`)

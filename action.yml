@@ -37,10 +37,40 @@ inputs:
     description: 'Playwright browser to install'
     required: false
     default: 'chromium'
+  cache_enabled:
+    description: 'Enable dependency cache for pip and Playwright browser binaries (true/false)'
+    required: false
+    default: 'true'
+  cache_key_suffix:
+    description: 'Optional cache key suffix; when empty, key is derived from worai/playwright versions and browser'
+    required: false
+    default: ''
 
 runs:
   using: 'composite'
   steps:
+    - name: Resolve cache settings
+      id: resolve_cache
+      shell: bash
+      run: "$GITHUB_ACTION_PATH/scripts/resolve-cache-key.sh"
+      env:
+        INPUT_CACHE_ENABLED: ${{ inputs.cache_enabled }}
+        INPUT_CACHE_KEY_SUFFIX: ${{ inputs.cache_key_suffix }}
+        INPUT_WORAI_VERSION: ${{ inputs.worai_version }}
+        INPUT_PLAYWRIGHT_VERSION: ${{ inputs.playwright_version }}
+        INPUT_PLAYWRIGHT_BROWSER: ${{ inputs.playwright_browser }}
+
+    - name: Cache pip and Playwright binaries
+      if: ${{ steps.resolve_cache.outputs.cache_enabled == 'true' }}
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/pip
+          ~/.cache/ms-playwright
+        key: ${{ runner.os }}-graph-sync-${{ steps.resolve_cache.outputs.cache_key_suffix }}
+        restore-keys: |
+          ${{ runner.os }}-graph-sync-
+
     - name: Install worai
       shell: bash
       run: "$GITHUB_ACTION_PATH/scripts/install-worai.sh"

@@ -64,3 +64,14 @@ When `config_path` is not provided, `worai` discovers config in this order:
   - `python3`
   - `python`
 - The action fails if neither executable is available in `PATH`.
+
+## Cache Behavior
+
+- Caching is enabled by default via `cache_enabled` input.
+- Cached paths:
+  - `~/.cache/pip`
+  - `~/.cache/ms-playwright`
+- If `cache_key_suffix` is empty, the action builds it as:
+  - `<worai_version>-<playwright_version>-<playwright_browser>`
+- Effective cache key is:
+  - `<runner.os>-graph-sync-<cache_key_suffix>`
