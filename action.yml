@@ -25,6 +25,18 @@ inputs:
     description: 'Pinned worai version to install'
     required: false
     default: '6.0.0'
+  install_playwright:
+    description: 'Install Playwright Python package and browser binaries (true/false)'
+    required: false
+    default: 'true'
+  playwright_version:
+    description: 'Pinned Playwright Python package version to install'
+    required: false
+    default: '1.55.0'
+  playwright_browser:
+    description: 'Playwright browser to install'
+    required: false
+    default: 'chromium'
 
 runs:
   using: 'composite'
@@ -34,6 +46,14 @@ runs:
       run: "$GITHUB_ACTION_PATH/scripts/install-worai.sh"
       env:
         INPUT_WORAI_VERSION: ${{ inputs.worai_version }}
+
+    - name: Install Playwright
+      shell: bash
+      run: "$GITHUB_ACTION_PATH/scripts/install-playwright.sh"
+      env:
+        INPUT_INSTALL_PLAYWRIGHT: ${{ inputs.install_playwright }}
+        INPUT_PLAYWRIGHT_VERSION: ${{ inputs.playwright_version }}
+        INPUT_PLAYWRIGHT_BROWSER: ${{ inputs.playwright_browser }}
 
     - name: Run worai graph sync
       shell: bash

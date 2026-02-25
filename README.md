@@ -1,6 +1,6 @@
 # graph-sync GitHub Action
 
-GitHub Action to install `worai` and run:
+GitHub Action to install `worai`, install Python Playwright + Chromium, and run:
 
 - `worai graph sync --profile <name> [--debug]`
 - `worai --config <path> graph sync --profile <name> [--debug]`
@@ -19,6 +19,9 @@ GitHub Action to install `worai` and run:
 | `debug` | No | `false` | When truthy (`true/1/yes`), appends `--debug`. |
 | `working_directory` | No | `.` | Directory where `worai` runs. |
 | `worai_version` | No | `6.0.0` | Exact `worai` version installed by the action. |
+| `install_playwright` | No | `true` | Installs Playwright Python package and browser binaries when truthy (`true/1/yes`). |
+| `playwright_version` | No | `1.55.0` | Exact Playwright Python package version installed when Playwright install is enabled. |
+| `playwright_browser` | No | `chromium` | Browser passed to `python -m playwright install`. |
 
 ## Behavior
 
@@ -44,6 +47,7 @@ Without root `--config`, standard `worai` config discovery applies:
   - value is valid JSON but not an object
 - `google_search_console` can be global or profile-level in `worai.toml`; profile value overrides global value; default is `false` when unset; maps to SDK setting `GOOGLE_SEARCH_CONSOLE`.
 - The command fails when selected profile does not define `api_key`.
+- By default, the action installs `playwright==1.55.0` and Chromium. Set `install_playwright: false` to skip this step.
 
 ## Minimal Usage
 
@@ -86,6 +90,7 @@ jobs:
 
 - `actions/checkout` is required only if your config file is in the repo workspace.
 - `actions/setup-python` is optional on GitHub-hosted runners (Python is usually preinstalled), but recommended if you want a fixed Python version.
+- GitHub-hosted Ubuntu runners typically satisfy Chromium runtime dependencies. On custom/self-hosted runners, install required OS packages before using Playwright.
 
 ## worai Config Examples
 
@@ -136,4 +141,5 @@ Run tests locally:
 ```bash
 ./tests/run-worai.sh
 ./tests/install-worai.sh
+./tests/install-playwright.sh
 ```
