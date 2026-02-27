@@ -55,7 +55,7 @@ When `config_path` is not provided, `worai` discovers config in this order:
 
 ## Installer Behavior
 
-- The action installs a pinned `worai` version via input `worai_version` (default `6.7.3`).
+- The action installs a pinned `worai` version via input `worai_version` (default `6.8.0`).
 - The action installs Playwright by default via:
   - Python package input `playwright_version` (default `1.55.0`)
   - Browser input `playwright_browser` (default `chromium`)

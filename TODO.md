@@ -9,7 +9,7 @@
 - [x] Add user-facing docs and technical spec.
 - [x] Add project index.
 - [x] Add release/pinning guidance and marketplace readiness checklist docs.
-- [x] Bump default pinned `worai_version` to `6.7.3`, align action examples to `@v6`, and add `VERSIONING.md` policy.
+- [x] Bump default pinned `worai_version` to `6.8.0`, align action examples to `@v6`, and add `VERSIONING.md` policy.
 - [x] Refresh `worai.toml` docs examples with anonymized multi-profile Google Sheets config (`acme`).
 - [x] Add optional Python Playwright installer with Chromium browser defaults and dedicated tests.
 - [x] Add optional built-in cache for pip and Playwright binaries with auto-derived cache key suffix fallback.
