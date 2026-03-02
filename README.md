@@ -31,6 +31,7 @@ GitHub Action to install `worai`, install Python Playwright + Chromium, and run:
   - `worai --config <path> --profile <name> graph sync run [--debug]`
 - If `config_path` is not set, command is:
   - `worai --profile <name> graph sync run [--debug]`
+- The action always passes the root `--profile` option (the recommended form in current `worai` docs for `graph sync run`).
 
 Without root `--config`, standard `worai` config discovery applies:
 
@@ -39,9 +40,16 @@ Without root `--config`, standard `worai` config discovery applies:
 - `~/.config/worai/config.toml`
 - `~/.worai.toml`
 
+For `graph sync run`, current `worai` profile resolution order is:
+
+- root `--profile`
+- `WORAI_PROFILE`
+- `default`
+
 ## Notes
 
 - Supported input sources are managed by `worai` config: `urls`, `sitemap_url` (+ optional `sitemap_url_pattern`), and Google Sheets (`sheets_url` + `sheets_name` + `sheets_service_account`).
+- Configure exactly one input source mode per run.
 - `sheets_service_account` accepts inline JSON object content or a file path.
 - For Google Sheets source, `sheets_service_account` is required and the command fails when:
   - value is missing or empty
@@ -53,6 +61,12 @@ Without root `--config`, standard `worai` config discovery applies:
 - By default, cache is enabled for `~/.cache/pip` and `~/.cache/ms-playwright`.
 - Default cache key format is `<runner.os>-graph-sync-<worai_version>-<playwright_version>-<playwright_browser>`.
 - Set `cache_enabled: false` to disable cache or set `cache_key_suffix` to control the key suffix directly.
+
+`worai` references:
+
+- Install & quickstart: <https://docs.wordlift.io/worai/install/>
+- Configuration: <https://docs.wordlift.io/worai/configuration/>
+- Graph command: <https://docs.wordlift.io/worai/commands/graph/>
 
 ## Minimal Usage
 
@@ -99,30 +113,35 @@ jobs:
 
 ## worai Config Examples
 
-Multi-market Google Sheets setup (anonymized as `acme`):
+The `graph sync run` workflow expects one source mode per profile.
+
+Sitemap source example:
 
 ```toml
-[profiles._base]
+[profiles.acme_sitemap]
+api_key = "${WORDLIFT_API_KEY}"
+sitemap_url = "https://example.com/sitemap.xml"
+ingest_source = "sitemap"
+ingest_loader = "web_scrape_api"
+ingest_passthrough_when_html = true
+web_page_import_timeout = "60s"
+```
+
+Google Sheets source example:
+
+```toml
+[profiles.acme_sheets]
+api_key = "${WORDLIFT_API_KEY}"
 sheets_url = "https://docs.google.com/spreadsheets/d/ACME_SPREADSHEET_ID"
+sheets_name = "URLs"
 sheets_service_account = "${SHEETS_SERVICE_ACCOUNT}"
-concurrency = 8
-overwrite = true
+ingest_source = "sheets"
+```
 
-[profiles.de]
-api_key = "${WORDLIFT_API_KEY_DE}"
-sheets_name = "URLs_DE"
+Optional local default profile selection:
 
-[profiles.at]
-api_key = "${WORDLIFT_API_KEY_AT}"
-sheets_name = "URLs_AT"
-
-[profiles.ch]
-api_key = "${WORDLIFT_API_KEY_CH}"
-sheets_name = "URLs_CH"
-
-[profiles.us]
-api_key = "${WORDLIFT_API_KEY_US}"
-sheets_name = "URLs_US"
+```bash
+export WORAI_PROFILE="acme_sitemap"
 ```
 
 ## Release and Pinning
