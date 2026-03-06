@@ -66,10 +66,10 @@ assert_eq "custom-key" "$suffix" "explicit suffix output"
 
 # Case 4: fallback suffix generation
 out_file="$TMP_DIR/fallback.out"
-code=$(run_case fallback env GITHUB_OUTPUT="$out_file" INPUT_CACHE_ENABLED="yes" INPUT_WORAI_VERSION="6.9.7" INPUT_PLAYWRIGHT_VERSION="1.55.0" INPUT_PLAYWRIGHT_BROWSER="chromium" "$SCRIPT")
+code=$(run_case fallback env GITHUB_OUTPUT="$out_file" INPUT_CACHE_ENABLED="yes" INPUT_WORAI_VERSION="6.11.0" INPUT_PLAYWRIGHT_VERSION="1.55.0" INPUT_PLAYWRIGHT_BROWSER="chromium" "$SCRIPT")
 assert_eq "0" "$code" "fallback suffix should succeed"
 suffix=$(read_output_value "cache_key_suffix" "$out_file")
-assert_eq "6.9.7-1.55.0-chromium" "$suffix" "fallback suffix value"
+assert_eq "6.11.0-1.55.0-chromium" "$suffix" "fallback suffix value"
 
 # Case 5: invalid cache_enabled
 out_file="$TMP_DIR/invalid.out"
