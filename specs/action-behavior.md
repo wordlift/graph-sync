@@ -6,7 +6,7 @@
 - `config_path` (optional)
 - `debug` (optional, default `false`)
 - `working_directory` (optional, default `.`)
-- `worai_version` (optional, default `6.12.11`)
+- `worai_version` (optional, default `6.12.12`)
 - `install_playwright` (optional, default `true`)
 - `playwright_version` (optional, default `1.55.0`)
 - `playwright_browser` (optional, default `chromium`)
