@@ -21,6 +21,7 @@
 - [x] Bump default pinned `worai_version` to `6.12.11` and sync tests/docs/specs references.
 - [x] Bump default pinned `worai_version` to `6.12.12` and sync tests/docs/specs references.
 - [x] Bump default pinned `worai_version` to `6.13.1` and sync tests/docs/specs references.
+- [x] Bump default pinned `worai_version` to `6.14.0` and sync tests/docs/specs references.
 - [x] Bump default pinned `playwright_version` to `1.58.0` and sync tests/docs/specs references.
 - [x] Update GitHub Actions dependencies to `actions/cache` `v5.0.3` and `actions/checkout` `v6.0.2`.
 - [x] Clarify `sheets_service_account` documentation in README/docs/specs (accepted formats and failure cases).

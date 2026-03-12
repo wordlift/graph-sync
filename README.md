@@ -19,7 +19,7 @@ GitHub Action to install `worai`, install Python Playwright + Chromium, and run:
 | `debug` | No | `false` | When truthy (`true/1/yes`), appends `--debug`. |
 | `log_level` | No | `warning` | Exports `WORAI_LOG_LEVEL` as `debug`, `info`, `warning`, or `error`. |
 | `working_directory` | No | `.` | Directory where `worai` runs. |
-| `worai_version` | No | `6.13.1` | Exact `worai` version installed by the action. |
+| `worai_version` | No | `6.14.0` | Exact `worai` version installed by the action. |
 | `install_playwright` | No | `true` | Installs Playwright Python package and browser binaries when truthy (`true/1/yes`). |
 | `playwright_version` | No | `1.58.0` | Exact Playwright Python package version installed when Playwright install is enabled. |
 | `playwright_browser` | No | `chromium` | Browser passed to `python -m playwright install`. |
@@ -164,7 +164,7 @@ export WORAI_PROFILE="acme_sitemap"
 ## Migration from `@v1`
 
 - Replace `uses: wordlift/graph-sync@v1` with `uses: wordlift/graph-sync@v6`.
-- Action `v6` defaults to installing `worai` `6.13.1`.
+- Action `v6` defaults to installing `worai` `6.14.0`.
 
 ## Development
 
