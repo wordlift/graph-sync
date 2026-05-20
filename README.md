@@ -12,19 +12,19 @@ GitHub Action to install `worai`, install Python Playwright + Chromium, and run:
 
 ## Inputs
 
-| Input | Required | Default | Description |
-| --- | --- | --- | --- |
-| `profile` | Yes | - | Profile name passed to `--profile`. Must exist in selected config. |
-| `config_path` | No | `''` | If set, action runs `worai --config <path> ...`. |
-| `debug` | No | `false` | When truthy (`true/1/yes`), appends `--debug`. |
-| `log_level` | No | `warning` | Exports `WORAI_LOG_LEVEL` as `debug`, `info`, `warning`, or `error`. |
-| `working_directory` | No | `.` | Directory where `worai` runs. |
-| `worai_version` | No | `6.17.6` | Exact `worai` version installed by the action. |
-| `install_playwright` | No | `true` | Installs Playwright Python package and browser binaries when truthy (`true/1/yes`). |
-| `playwright_version` | No | `1.58.0` | Exact Playwright Python package version installed when Playwright install is enabled. |
-| `playwright_browser` | No | `chromium` | Browser passed to `python -m playwright install`. |
-| `cache_enabled` | No | `true` | Enables dependency cache for pip and Playwright browser binaries when truthy (`true/1/yes`). |
-| `cache_key_suffix` | No | `''` | Optional cache key suffix. When empty, action derives `<worai_version>-<playwright_version>-<playwright_browser>`. |
+| Input                | Required | Default    | Description                                                                                                        |
+| -------------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------ |
+| `profile`            | Yes      | -          | Profile name passed to `--profile`. Must exist in selected config.                                                 |
+| `config_path`        | No       | `''`       | If set, action runs `worai --config <path> ...`.                                                                   |
+| `debug`              | No       | `false`    | When truthy (`true/1/yes`), appends `--debug`.                                                                     |
+| `log_level`          | No       | `warning`  | Exports `WORAI_LOG_LEVEL` as `debug`, `info`, `warning`, or `error`.                                               |
+| `working_directory`  | No       | `.`        | Directory where `worai` runs.                                                                                      |
+| `worai_version`      | No       | `6.18.0`   | Exact `worai` version installed by the action.                                                                     |
+| `install_playwright` | No       | `true`     | Installs Playwright Python package and browser binaries when truthy (`true/1/yes`).                                |
+| `playwright_version` | No       | `1.58.0`   | Exact Playwright Python package version installed when Playwright install is enabled.                              |
+| `playwright_browser` | No       | `chromium` | Browser passed to `python -m playwright install`.                                                                  |
+| `cache_enabled`      | No       | `true`     | Enables dependency cache for pip and Playwright browser binaries when truthy (`true/1/yes`).                       |
+| `cache_key_suffix`   | No       | `''`       | Optional cache key suffix. When empty, action derives `<worai_version>-<playwright_version>-<playwright_browser>`. |
 
 ## Behavior
 
@@ -164,7 +164,7 @@ export WORAI_PROFILE="acme_sitemap"
 ## Migration from `@v1`
 
 - Replace `uses: wordlift/graph-sync@v1` with `uses: wordlift/graph-sync@v6`.
-- Action `v6` defaults to installing `worai` `6.17.6`.
+- Action `v6` defaults to installing `worai` `6.18.0`.
 
 ## Development
 
