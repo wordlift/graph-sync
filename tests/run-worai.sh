@@ -39,12 +39,30 @@ FAKE_BIN="$TMP_DIR/bin"
 mkdir -p "$FAKE_BIN"
 cat > "$FAKE_BIN/worai" <<'EOS'
 #!/usr/bin/env bash
+if [[ "$*" == *"--help"* ]]; then
+  echo "  --output-dir TEXT"
+  exit 0
+fi
 printf '%s\n' "$*" > "$WORAI_ARGS_FILE"
 printf '%s\n' "${WORAI_LOG_LEVEL:-}" > "$WORAI_LOG_LEVEL_FILE"
 EOS
 chmod +x "$FAKE_BIN/worai"
 
+FAKE_BIN_OLD="$TMP_DIR/bin-old"
+mkdir -p "$FAKE_BIN_OLD"
+cat > "$FAKE_BIN_OLD/worai" <<'EOS'
+#!/usr/bin/env bash
+if [[ "$*" == *"--help"* ]]; then
+  echo "  --debug / --no-debug"
+  exit 0
+fi
+printf '%s\n' "$*" > "$WORAI_ARGS_FILE"
+printf '%s\n' "${WORAI_LOG_LEVEL:-}" > "$WORAI_LOG_LEVEL_FILE"
+EOS
+chmod +x "$FAKE_BIN_OLD/worai"
+
 BASE_ENV=(env PATH="$FAKE_BIN:$PATH" WORAI_ARGS_FILE="$TMP_DIR/args.txt" WORAI_LOG_LEVEL_FILE="$TMP_DIR/log-level.txt")
+BASE_ENV_OLD=(env PATH="$FAKE_BIN_OLD:$PATH" WORAI_ARGS_FILE="$TMP_DIR/args.txt" WORAI_LOG_LEVEL_FILE="$TMP_DIR/log-level.txt")
 
 # Case 1: missing profile
 code=$(run_case missing_profile "${BASE_ENV[@]}" INPUT_WORKING_DIRECTORY="$ROOT_DIR" "$SCRIPT")
@@ -86,6 +104,20 @@ assert_eq "1" "$code" "invalid log level should fail"
 # Case 7: missing working directory
 code=$(run_case bad_workdir "${BASE_ENV[@]}" INPUT_PROFILE="demo" INPUT_WORKING_DIRECTORY="$ROOT_DIR/nope" "$SCRIPT")
 assert_eq "1" "$code" "invalid working directory should fail"
+
+# Case 8: output_dir passed to new worai (--help advertises --output-dir)
+rm -f "$TMP_DIR/args.txt"
+code=$(run_case output_dir_new "${BASE_ENV[@]}" INPUT_PROFILE="demo" INPUT_OUTPUT_DIR="/tmp/out" INPUT_WORKING_DIRECTORY="$ROOT_DIR" "$SCRIPT")
+assert_eq "0" "$code" "output_dir with new worai should succeed"
+args=$(cat "$TMP_DIR/args.txt")
+assert_eq "--profile demo graph sync run --output-dir /tmp/out" "$args" "output_dir should be passed when worai supports it"
+
+# Case 9: output_dir silently skipped for old worai (--help does not advertise --output-dir)
+rm -f "$TMP_DIR/args.txt"
+code=$(run_case output_dir_old "${BASE_ENV_OLD[@]}" INPUT_PROFILE="demo" INPUT_OUTPUT_DIR="/tmp/out" INPUT_WORKING_DIRECTORY="$ROOT_DIR" "$SCRIPT")
+assert_eq "0" "$code" "output_dir with old worai should still succeed"
+args=$(cat "$TMP_DIR/args.txt")
+assert_eq "--profile demo graph sync run" "$args" "output_dir should be silently skipped for old worai"
 
 if [[ "$fail_count" -ne 0 ]]; then
   echo "\n$fail_count test(s) failed, $pass_count passed"

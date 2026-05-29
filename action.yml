@@ -28,7 +28,7 @@ inputs:
   worai_version:
     description: "Pinned worai version to install"
     required: false
-    default: "6.18.1"
+    default: "6.19.0"
   install_playwright:
     description: "Install Playwright Python package and browser binaries (true/false)"
     required: false
@@ -47,6 +47,10 @@ inputs:
     default: "true"
   cache_key_suffix:
     description: "Optional cache key suffix; when empty, key is derived from worai/playwright versions and browser"
+    required: false
+    default: ""
+  output_dir:
+    description: "Output directory for artifacts (reports, debug files). No artifacts are written when omitted."
     required: false
     default: ""
 
@@ -98,3 +102,24 @@ runs:
         INPUT_DEBUG: ${{ inputs.debug }}
         INPUT_LOG_LEVEL: ${{ inputs.log_level }}
         INPUT_WORKING_DIRECTORY: ${{ inputs.working_directory }}
+        INPUT_OUTPUT_DIR: ${{ inputs.output_dir }}
+
+    - name: Publish sync report to job summary
+      if: ${{ always() && inputs.output_dir != '' }}
+      shell: bash
+      run: |
+        report="${{ inputs.output_dir }}/graph_sync_report.md"
+        if [ -f "$report" ]; then
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+        else
+          echo "## Graph Sync Report — ${{ inputs.profile }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Report not produced." >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+    - name: Upload sync report
+      if: ${{ always() && inputs.output_dir != '' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: graph-sync-report-${{ inputs.profile }}
+        path: ${{ inputs.output_dir }}/
+        if-no-files-found: ignore

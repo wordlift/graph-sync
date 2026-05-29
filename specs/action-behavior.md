@@ -7,7 +7,8 @@
 - `debug` (optional, default `false`)
 - `log_level` (optional, default `warning`)
 - `working_directory` (optional, default `.`)
-- `worai_version` (optional, default `6.18.1`)
+- `worai_version` (optional, default `6.19.0`)
+- `output_dir` (optional, default empty)
 - `install_playwright` (optional, default `true`)
 - `playwright_version` (optional, default `1.58.0`)
 - `playwright_browser` (optional, default `chromium`)
@@ -61,9 +62,11 @@ The action installs Playwright via:
    - optional root config: `--config <path>`
    - root profile option: `--profile <name>`
    - subcommand: `graph sync run`
+   - optional: `--output-dir <path>` — only appended when `output_dir` is non-empty AND `worai graph sync run --help` advertises `--output-dir` (guards against pre-6.19.0 installs)
    - optional: `--debug`
 6. Execute `worai` with `WORAI_LOG_LEVEL=<value>` in the process environment.
 7. Execute command from `working_directory`.
+8. When `output_dir` is set, publish `graph_sync_report.md` to the job summary and upload all files under `output_dir` as a `graph-sync-report-<profile>` artifact.
 
 ## Failure Semantics
 

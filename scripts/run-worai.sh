@@ -6,6 +6,7 @@ config_path="${INPUT_CONFIG_PATH:-}"
 debug="${INPUT_DEBUG:-false}"
 log_level="${INPUT_LOG_LEVEL:-warning}"
 working_directory="${INPUT_WORKING_DIRECTORY:-.}"
+output_dir="${INPUT_OUTPUT_DIR:-}"
 debug_lower="$(printf '%s' "$debug" | tr '[:upper:]' '[:lower:]')"
 log_level_lower="$(printf '%s' "$log_level" | tr '[:upper:]' '[:lower:]')"
 
@@ -31,6 +32,13 @@ if [[ -n "$config_path" ]]; then
 fi
 
 cmd+=("--profile" "$profile" "graph" "sync" "run")
+
+# Guard against older worai versions that predate --output-dir (pre-6.19.0):
+# passing an unknown flag would cause a hard failure, so skip silently when
+# the installed worai does not advertise the flag.
+if [[ -n "$output_dir" ]] && "${cmd[@]}" --help 2>&1 | grep -q -- "--output-dir"; then
+  cmd+=("--output-dir" "$output_dir")
+fi
 
 case "$debug_lower" in
   true|1|yes)
