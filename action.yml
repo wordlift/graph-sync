@@ -53,6 +53,10 @@ inputs:
     description: "Output directory for artifacts (reports, debug files). Defaults to $GITHUB_WORKSPACE/output/<profile>."
     required: false
     default: ""
+  memory_gib:
+    description: "Available memory in GiB passed to the resource monitor."
+    required: false
+    default: "4"
 
 runs:
   using: "composite"
@@ -93,6 +97,15 @@ runs:
         INPUT_PLAYWRIGHT_VERSION: ${{ inputs.playwright_version }}
         INPUT_PLAYWRIGHT_BROWSER: ${{ inputs.playwright_browser }}
 
+    - name: Start resource monitor
+      shell: bash
+      run: "$GITHUB_ACTION_PATH/scripts/start-monitor-resources.sh"
+      env:
+        INPUT_PROFILE: ${{ inputs.profile }}
+        INPUT_OUTPUT_DIR: ${{ inputs.output_dir }}
+        INPUT_MEMORY_GIB: ${{ inputs.memory_gib }}
+        INPUT_WORKING_DIRECTORY: ${{ inputs.working_directory }}
+
     - name: Run worai graph sync run
       id: run_worai
       shell: bash
@@ -105,6 +118,14 @@ runs:
         INPUT_WORKING_DIRECTORY: ${{ inputs.working_directory }}
         INPUT_OUTPUT_DIR: ${{ inputs.output_dir }}
 
+    - name: Collect resource monitor report
+      if: always()
+      shell: bash
+      run: "$GITHUB_ACTION_PATH/scripts/collect-monitor-resources.sh"
+      env:
+        INPUT_PROFILE: ${{ inputs.profile }}
+        INPUT_OUTPUT_DIR: ${{ inputs.output_dir }}
+
     - name: Publish sync report to job summary
       if: always()
       shell: bash
@@ -115,6 +136,13 @@ runs:
         else
           echo "## Graph Sync Report — ${{ inputs.profile }}" >> "$GITHUB_STEP_SUMMARY"
           echo "Report not produced." >> "$GITHUB_STEP_SUMMARY"
+        fi
+        memory_report="${{ steps.run_worai.outputs.output_dir }}/memory_report.md"
+        if [ -f "$memory_report" ]; then
+          cat "$memory_report" >> "$GITHUB_STEP_SUMMARY"
+        else
+          echo "## Memory report — ${{ inputs.profile }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Monitor did not produce output." >> "$GITHUB_STEP_SUMMARY"
         fi
 
     - name: Upload sync report
