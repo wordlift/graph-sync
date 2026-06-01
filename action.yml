@@ -50,7 +50,7 @@ inputs:
     required: false
     default: ""
   output_dir:
-    description: "Output directory for artifacts (reports, debug files). No artifacts are written when omitted."
+    description: "Output directory for artifacts (reports, debug files). Defaults to $GITHUB_WORKSPACE/output/<profile>."
     required: false
     default: ""
 
@@ -94,6 +94,7 @@ runs:
         INPUT_PLAYWRIGHT_BROWSER: ${{ inputs.playwright_browser }}
 
     - name: Run worai graph sync run
+      id: run_worai
       shell: bash
       run: "$GITHUB_ACTION_PATH/scripts/run-worai.sh"
       env:
@@ -105,10 +106,10 @@ runs:
         INPUT_OUTPUT_DIR: ${{ inputs.output_dir }}
 
     - name: Publish sync report to job summary
-      if: ${{ always() && inputs.output_dir != '' }}
+      if: always()
       shell: bash
       run: |
-        report="${{ inputs.output_dir }}/graph_sync_report.md"
+        report="${{ steps.run_worai.outputs.output_dir }}/graph_sync_report.md"
         if [ -f "$report" ]; then
           cat "$report" >> "$GITHUB_STEP_SUMMARY"
         else
@@ -117,9 +118,9 @@ runs:
         fi
 
     - name: Upload sync report
-      if: ${{ always() && inputs.output_dir != '' }}
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: graph-sync-report-${{ inputs.profile }}
-        path: ${{ inputs.output_dir }}/
+        path: ${{ steps.run_worai.outputs.output_dir }}/
         if-no-files-found: ignore

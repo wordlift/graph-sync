@@ -6,7 +6,7 @@ config_path="${INPUT_CONFIG_PATH:-}"
 debug="${INPUT_DEBUG:-false}"
 log_level="${INPUT_LOG_LEVEL:-warning}"
 working_directory="${INPUT_WORKING_DIRECTORY:-.}"
-output_dir="${INPUT_OUTPUT_DIR:-}"
+output_dir="${INPUT_OUTPUT_DIR:-${GITHUB_WORKSPACE}/output/${INPUT_PROFILE}}"
 debug_lower="$(printf '%s' "$debug" | tr '[:upper:]' '[:lower:]')"
 log_level_lower="$(printf '%s' "$log_level" | tr '[:upper:]' '[:lower:]')"
 
@@ -31,12 +31,25 @@ if [[ -n "$config_path" ]]; then
   cmd+=("--config" "$config_path")
 fi
 
-cmd+=("--profile" "$profile" "graph" "sync" "run")
+graph_sync_cmd=("graph" "sync" "run")
 
 # Guard against older worai versions that predate --output-dir (pre-6.19.0):
 # passing an unknown flag would cause a hard failure, so skip silently when
-# the installed worai does not advertise the flag.
-if [[ -n "$output_dir" ]] && "${cmd[@]}" --help 2>&1 | grep -q -- "--output-dir"; then
+# the installed version is older than the minimum that supports it.
+support_output_dir=false
+if [[ -n "$output_dir" ]]; then
+  worai_ver=$(worai version 2>/dev/null || echo "0.0.0")
+  min_ver="6.19.0"
+  if [[ "$(printf '%s\n%s\n' "$min_ver" "$worai_ver" | sort -V | head -1)" == "$min_ver" ]]; then
+    support_output_dir=true
+  else
+    echo "warning: installed worai ($worai_ver) does not support --output-dir; output artifacts will not be written" >&2
+  fi
+fi
+
+cmd+=("--profile" "$profile" "${graph_sync_cmd[@]}")
+
+if [[ "$support_output_dir" == true ]]; then
   cmd+=("--output-dir" "$output_dir")
 fi
 
@@ -60,6 +73,8 @@ case "$log_level_lower" in
     exit 1
     ;;
 esac
+
+echo "output_dir=${output_dir}" >> "$GITHUB_OUTPUT"
 
 cd "$working_directory"
 printf 'Running:'
