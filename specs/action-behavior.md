@@ -7,7 +7,7 @@
 - `debug` (optional, default `false`)
 - `log_level` (optional, default `warning`)
 - `working_directory` (optional, default `.`)
-- `worai_version` (optional, default `6.19.0`)
+- `worai_version` (optional, default `6.20.1`)
 - `output_dir` (optional, default empty)
 - `install_playwright` (optional, default `true`)
 - `playwright_version` (optional, default `1.58.0`)

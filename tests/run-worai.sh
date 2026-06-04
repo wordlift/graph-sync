@@ -40,7 +40,7 @@ mkdir -p "$FAKE_BIN"
 cat > "$FAKE_BIN/worai" <<'EOS'
 #!/usr/bin/env bash
 if [[ "$1" == "version" ]]; then
-  echo "6.19.0"
+  echo "6.20.1"
   exit 0
 fi
 printf '%s\n' "$*" > "$WORAI_ARGS_FILE"
