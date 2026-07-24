@@ -217,8 +217,20 @@ runs:
 
     - name: Upload sync report
       if: always()
+      # A failed/blocked upload (e.g. GitHub Actions storage quota full) must NOT fail an
+      # otherwise-successful sync — the KG is already written; the artifact is only a receipt.
+      continue-on-error: true
       uses: actions/upload-artifact@v4
       with:
         name: graph-sync-report-${{ inputs.profile }}
-        path: ${{ steps.run_worai.outputs.output_dir }}/
+        # Keep receipts only a week (was the 90-day default) to stop storage from filling.
+        retention-days: 7
+        # Upload only the small human-readable reports. Deliberately excludes the large
+        # graph-kpis/graph_kpis.json (per-URL SHACL/KPI details) — the summary
+        # graph_kpi_report.md is kept instead. This is what keeps the storage bill flat.
+        path: |
+          ${{ steps.run_worai.outputs.output_dir }}/graph_sync_report.md
+          ${{ steps.run_worai.outputs.output_dir }}/graph_sync_failures.csv
+          ${{ steps.run_worai.outputs.output_dir }}/memory_report.md
+          ${{ steps.run_worai.outputs.output_dir }}/graph-kpis/graph_kpi_report.md
         if-no-files-found: ignore
