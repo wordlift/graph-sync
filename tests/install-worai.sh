@@ -46,15 +46,22 @@ chmod +x "$FAKE_BIN/python3"
 
 BASE_ENV=(env PATH="$FAKE_BIN:/usr/bin:/bin" PYTHON_CALLS_FILE="$TMP_DIR/python_calls.txt")
 
-# Case 1: missing version
+# Case 1: action metadata pins the supported default
+default_version=$(awk '
+  $1 == "worai_version:" { in_input = 1; next }
+  in_input && $1 == "default:" { gsub(/"/, "", $2); print $2; exit }
+' "$ROOT_DIR/action.yml")
+assert_eq "6.20.10" "$default_version" "action default should pin the current worai version"
+
+# Case 2: missing version
 code=$(run_case missing_version "${BASE_ENV[@]}" "$SCRIPT")
 assert_eq "1" "$code" "missing version should fail"
 
-# Case 2: whitespace in version
+# Case 3: whitespace in version
 code=$(run_case bad_version "${BASE_ENV[@]}" INPUT_WORAI_VERSION="1.2 3" "$SCRIPT")
 assert_eq "1" "$code" "version with whitespace should fail"
 
-# Case 3: install with python3
+# Case 4: install with python3
 rm -f "$TMP_DIR/python_calls.txt"
 code=$(run_case install_python3 "${BASE_ENV[@]}" INPUT_WORAI_VERSION="6.18.1" "$SCRIPT")
 assert_eq "0" "$code" "python3 install should succeed"
@@ -63,7 +70,7 @@ second_call=$(sed -n '2p' "$TMP_DIR/python_calls.txt")
 assert_eq "-m pip install --upgrade pip" "$first_call" "first command upgrades pip"
 assert_eq "-m pip install worai==6.18.1" "$second_call" "second command installs pinned worai"
 
-# Case 4: missing python interpreters
+# Case 5: missing python interpreters
 EMPTY_BIN="$TMP_DIR/empty-bin"
 mkdir -p "$EMPTY_BIN"
 code=$(run_case no_python /usr/bin/env PATH="$EMPTY_BIN" INPUT_WORAI_VERSION="6.18.1" /bin/bash "$SCRIPT")
