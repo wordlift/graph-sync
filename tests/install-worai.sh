@@ -51,7 +51,7 @@ default_version=$(awk '
   $1 == "worai_version:" { in_input = 1; next }
   in_input && $1 == "default:" { gsub(/"/, "", $2); print $2; exit }
 ' "$ROOT_DIR/action.yml")
-assert_eq "6.20.10" "$default_version" "action default should pin the current worai version"
+assert_eq "6.20.14" "$default_version" "action default should pin the current worai version"
 
 # Case 2: missing version
 code=$(run_case missing_version "${BASE_ENV[@]}" "$SCRIPT")
