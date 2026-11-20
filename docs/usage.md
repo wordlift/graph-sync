@@ -63,6 +63,7 @@ When `config_path` is not provided, `worai` discovers config in this order:
 - Stores raw graph export only under `RUNNER_TEMP` and removes it on exit.
 - Stores `graph_kpi_payload.json`, `graph_kpis.json`, and `graph_kpi_report.md` under `output_dir/graph-kpis/`.
 - By default, KPI failures emit a warning and do not fail a successful sync. Set `graph_kpis_fail_on_error: true` for strict behavior.
+- `graph_kpis_timeout_seconds` (default `300`) sets the HTTP timeout for the `worai graph export` request and for `worai graph kpis push`, and also caps the whole `kpis push` run.
 - Fast scheduled KPI runs can set `graph_kpis_no_builtin_shapes: true` with `graph_kpis_shape` and `graph_kpis_shacl_workers`.
 
 ## Google Search Console Flag

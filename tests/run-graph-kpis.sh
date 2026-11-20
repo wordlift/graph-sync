@@ -158,6 +158,7 @@ assert_contains "--api-url https://api.wordlift.io" "$args" "should pass API URL
 assert_contains "--no-builtin-shapes" "$args" "should pass no builtin shapes option"
 assert_contains "--shape profiles/_base/shapes/graph-kpis-url-roots.shacl.ttl" "$args" "should pass custom shape"
 assert_not_contains "--website-host" "$args" "action should not pass website host"
+assert_contains "graph export --timeout 300 " "$args" "should pass default timeout to graph export"
 payload_check="$(python3 - "$TMP_DIR/out/graph-kpis/graph_kpi_payload.json" "$TMP_DIR/out/graph-kpis/graph_kpis.json" <<'PY'
 import json, sys
 payload = json.load(open(sys.argv[1]))
@@ -210,6 +211,13 @@ assert_contains "WordLift API URL is not allowed" "$base_query_out" "base URL wi
 # Case 8: relative WORAI_CONFIG is left for worai execution from working_directory.
 code=$(run_case worai_config_relative "${BASE_ENV[@]}" WORAI_CONFIG="./custom.toml" INPUT_GRAPH_KPIS_ENABLED="true" INPUT_PROFILE="custom" INPUT_WORKING_DIRECTORY="$WORK_DIR" INPUT_OUTPUT_DIR="$TMP_DIR/out-worai-config" INPUT_GRAPH_KPIS_SNAPSHOT_DATE="2026-06-23" "$SCRIPT")
 assert_eq "0" "$code" "relative WORAI_CONFIG should resolve from working_directory"
+
+# Case 9: graph_kpis_timeout_seconds also applies to the graph export request.
+rm -f "$TMP_DIR/worai-args.txt"
+code=$(run_case export_timeout "${BASE_ENV[@]}" INPUT_GRAPH_KPIS_ENABLED="true" INPUT_GRAPH_KPIS_TIMEOUT_SECONDS="1200" INPUT_PROFILE="prod" INPUT_WORKING_DIRECTORY="$WORK_DIR" INPUT_OUTPUT_DIR="$TMP_DIR/out-export-timeout" INPUT_GRAPH_KPIS_SNAPSHOT_DATE="2026-06-23" "$SCRIPT")
+assert_eq "0" "$code" "custom KPI timeout should succeed"
+export_args="$(grep ' graph export ' "$TMP_DIR/worai-args.txt")"
+assert_contains "graph export --timeout 1200 " "$export_args" "should pass custom timeout to graph export"
 
 if [[ "$fail_count" -ne 0 ]]; then
   echo "\n$fail_count test(s) failed, $pass_count passed"
