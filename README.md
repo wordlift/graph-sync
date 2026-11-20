@@ -32,7 +32,7 @@ GitHub Action to install `worai`, install Python Playwright + Chromium, and run:
 | `graph_kpis_api_url` | No | `https://api.wordlift.io` | HTTPS origin URL for WordLift graph KPI APIs. |
 | `graph_kpis_allowed_hosts` | No | `api.wordlift.io` | Comma-separated HTTPS host allowlist for graph KPI API and export endpoints. |
 | `graph_kpis_export_endpoint` | No | `''`       | Optional WordLift graph export endpoint override. Defaults to `worai graph export` behavior. |
-| `graph_kpis_timeout_seconds` | No | `300` | Maximum seconds for KPI calculation/upload and WordLift API requests. |
+| `graph_kpis_timeout_seconds` | No | `300` | Maximum seconds for KPI calculation/upload and WordLift API requests, including the `worai graph export` request. |
 | `graph_kpis_shacl_workers` | No | `4` | Max worker threads for URL-level SHACL validation. |
 | `graph_kpis_shape` | No | `''` | Comma-separated extra SHACL shape files for KPI validation. |
 | `graph_kpis_no_builtin_shapes` | No | `false` | Use only shapes passed with `graph_kpis_shape` for KPI validation. |

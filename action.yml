@@ -78,7 +78,7 @@ inputs:
     required: false
     default: ""
   graph_kpis_timeout_seconds:
-    description: "Maximum seconds for graph KPI calculation/upload and WordLift API requests."
+    description: "Maximum seconds for graph KPI calculation/upload and WordLift API requests, including the graph export request."
     required: false
     default: "300"
   graph_kpis_shacl_workers:

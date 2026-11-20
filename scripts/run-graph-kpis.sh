@@ -140,7 +140,7 @@ cmd+=("--profile" "$profile" "graph" "export")
 if [[ -n "$export_endpoint" ]]; then
   cmd+=("--endpoint" "$export_endpoint")
 fi
-cmd+=("$export_file")
+cmd+=("--timeout" "$timeout_seconds" "$export_file")
 
 cd "$working_directory"
 printf 'Running graph export for KPI calculation.\n'

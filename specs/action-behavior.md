@@ -87,7 +87,7 @@ When `graph_kpis_enabled` is true and `graph sync run` succeeds:
 2. Reject WordLift API or export endpoint URLs unless they use HTTPS and a host listed in `graph_kpis_allowed_hosts`.
    - `graph_kpis_api_url` must be an origin URL without path, params, query, or fragment.
 3. Export the current graph to a temporary JSON-LD file under `RUNNER_TEMP`:
-   - `worai [--config <path>] --profile <name> graph export [--endpoint <endpoint>] <temp-file>`
+   - `worai [--config <path>] --profile <name> graph export [--endpoint <endpoint>] --timeout <graph_kpis_timeout_seconds> <temp-file>`
 4. Calculate and upload the KPI snapshot with native `worai`:
    - `worai [--config <path>] --profile <name> graph kpis push <temp-file> --snapshot-date <date> --api-url <url> --timeout <seconds> --shacl-workers <n> --output <payload-json> --details-output <details-json>`
    - append `--no-builtin-shapes` when `graph_kpis_no_builtin_shapes` is truthy.
